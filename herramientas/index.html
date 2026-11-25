@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autodiagnóstico SST y calculadora de multas SUNAFIL | Opzilia Consulting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: claro y profesional, como un consultor que te explica tu situación sin asustar.
+   IDEA: un tablero de control: un anillo de cumplimiento que se completa a medida que cumples.
+   PICTURE: resultado en vivo grande (anillo de cumplimiento / monto en soles) junto a las preguntas.
+   COLOUR and TYPE: carbón #1E1B18 dominante, cobre #B4682F de apoyo, cobre claro #E0A06A de acento; Montserrat + Inter.
+   LAYOUT: banda superior con marca y pestañas; dos columnas (preguntas | resultado fijo) que se apilan en celular. */
+:root{color-scheme:light dark;
+--bg:light-dark(#F7F4F0,#141210);--panel:light-dark(#FFFFFF,#26221E);--ink:light-dark(#1E1B18,#EFE9E2);
+--muted:light-dark(#5A524B,#A39A91);--line:light-dark(#E2DCD5,#38322C);--blue:light-dark(#B4682F,#E0A06A);
+--blueSoft:light-dark(#F1E7DC,#2E2924);--onBlue:light-dark(#FFFFFF,#1E1B18);
+--bad:light-dark(#B42318,#FF8A80);--warn:light-dark(#8A5A00,#FCD34D);--ok:light-dark(#067647,#86EFAC)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:'Montserrat',sans-serif;line-height:1.08;margin:0;text-wrap:balance}
+.top{background:#1E1B18;color:#fff;padding:22px max(5vw,16px) 0}
+.brand{display:flex;align-items:center;gap:12px;max-width:1240px;margin:0 auto;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:2px}
+.brand small{font-weight:500;color:#A39A91;letter-spacing:2px}
+.hero{max-width:1240px;margin:0 auto;padding:28px 0 0}
+.hero h1{font-size:clamp(30px,4.4vw,48px)}
+.hero p{color:#D8CFC5;max-width:640px;margin:12px 0 0}
+.tabs{display:flex;gap:6px;max-width:1240px;margin:26px auto 0;flex-wrap:wrap}
+.tabs a{color:#D8CFC5;text-decoration:none;padding:14px 20px;border-radius:10px 10px 0 0;font-weight:600;min-height:44px}
+.tabs a[aria-current=page]{background:var(--bg);color:var(--ink)}
+.tabs a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #E0A06A;outline-offset:2px}
+.band{padding:clamp(24px,4vw,48px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}
+.sticky{position:sticky;top:16px}
+.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:8px}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+select,input[type=number]{font:inherit;font-size:16px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:48px}
+.q{padding:18px 0;border-top:1px solid var(--line)}
+.q h3{font-size:18px;font-family:Inter,sans-serif;font-weight:600}
+.q p{margin:4px 0 12px;color:var(--muted);font-size:15px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opts button{font:inherit;font-weight:600;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.opts button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:var(--onBlue)}
+.ring{display:flex;align-items:center;gap:20px}
+.ring svg{width:140px;height:140px;flex:none}
+.big{font-family:'Montserrat',sans-serif;font-size:clamp(34px,5vw,52px);font-weight:700;line-height:1}
+.lvl{font-weight:700;font-size:20px}
+.muted{color:var(--muted)}
+.gaps{margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.gaps li{background:var(--blueSoft);border-radius:12px;padding:12px 14px}
+.gaps b{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:600;min-height:48px;padding:12px 20px;border-radius:10px;border:0;cursor:pointer;background:var(--blue);color:var(--onBlue);text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.px{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin:16px 0 4px}
+.px i{aspect-ratio:1;border-radius:3px;background:var(--line);transition:background .4s}
+.px i.on{background:var(--blue)}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:16px}
+th,td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.hidden{display:none}
+.toast{min-height:22px;font-size:14px;color:var(--ok);margin-top:8px}
+@media(max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)}.sticky{position:static}}
+@media(max-width:520px){.grid3{grid-template-columns:minmax(0,1fr)}.ring svg{width:110px;height:110px}}
+@media(prefers-reduced-motion:reduce){.px i{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="opzg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D18A4F"/><stop offset="1" stop-color="#7A4423"/></linearGradient></defs><circle cx="56" cy="64" r="38" fill="none" stroke="#FFFFFF" stroke-width="20"/><rect x="86" y="8" width="26" height="26" rx="5" transform="rotate(45 99 21)" fill="url(#opzg1)"/></svg>
+    <span><span style="font-family:'Montserrat',sans-serif;font-weight:800;letter-spacing:-0.02em;font-size:1.3em">Opzil<span style="background:linear-gradient(120deg,#D18A4F,#7A4423);-webkit-background-clip:text;background-clip:text;color:transparent">ia</span></span> <small>CONSULTING</small></span>
+  </div>
+  <div class="hero">
+    <h1 id="title">¿Tu sistema de SST resistiría una inspección de SUNAFIL hoy?</h1>
+    <p id="lead">Responde 12 preguntas sobre la Ley 29783 y obtén tu nivel de cumplimiento y tus brechas prioritarias en menos de 5 minutos.</p>
+  </div>
+  <nav class="tabs" aria-label="Herramientas">
+    <a href="#autodiagnostico" id="t-diag">Autodiagnóstico</a>
+    <a href="#calculadora" id="t-calc">Calculadora de multas</a>
+  </nav>
+</header>
+
+<main class="band">
+  <section id="v-diag" class="wrap" aria-labelledby="t-diag">
+    <div class="card">
+      <h2 style="font-size:24px">Tu empresa</h2>
+      <div class="setup" style="margin-top:14px">
+        <label class="f">Tamaño de la empresa
+          <select id="d-tipo"><option value="micro">Microempresa (REMYPE)</option><option value="peq">Pequeña empresa (REMYPE)</option><option value="nomype" selected>Mediana o grande (no MYPE)</option></select>
+        </label>
+        <label class="f">Número de trabajadores
+          <input id="d-trab" type="number" min="1" step="1" value="150" inputmode="numeric">
+        </label>
+      </div>
+      <div id="qs"></div>
+    </div>
+    <aside class="card sticky" aria-live="polite">
+      <div class="muted" style="font-weight:600">Tu resultado</div>
+      <div class="ring" style="margin-top:12px">
+        <svg viewBox="0 0 120 120" role="img" id="ringsvg" aria-label="Cumplimiento"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="arc" cx="60" cy="60" r="50" fill="none" stroke="var(--blue)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 314.16" transform="rotate(-90 60 60)"/></svg>
+        <div><div class="big" id="pct">0%</div><div class="lvl" id="lvl">Responde las preguntas</div><div class="muted" id="cnt"></div></div>
+      </div>
+      <div class="px" id="px" aria-hidden="true"></div>
+      <h3 style="font-size:18px;margin-top:16px">Brechas prioritarias</h3>
+      <ul class="gaps" id="gaps"><li class="muted">Aparecerán aquí cuando respondas.</li></ul>
+      <div class="row">
+        <a class="btn" href="#calculadora" id="toCalc">Calcular mi multa potencial</a>
+        <button class="btn ghost" id="copyDiag" type="button">Copiar resumen</button>
+      </div>
+      <div class="toast" id="toastD"></div>
+      <p class="note">Resultado orientativo basado en la Ley 29783 y su reglamento (D.S. 005-2012-TR). No reemplaza una auditoría del sistema de gestión.</p>
+    </aside>
+  </section>
+
+  <section id="v-calc" class="wrap hidden" aria-labelledby="t-calc">
+    <div class="card">
+      <h2 style="font-size:24px">Datos de la inspección</h2>
+      <div class="setup" style="margin-top:14px">
+        <label class="f">Tamaño de la empresa
+          <select id="c-tipo"><option value="micro">Microempresa (REMYPE)</option><option value="peq">Pequeña empresa (REMYPE)</option><option value="nomype" selected>Mediana o grande (no MYPE)</option></select>
+        </label>
+        <label class="f">Trabajadores afectados
+          <input id="c-trab" type="number" min="1" step="1" value="150" inputmode="numeric">
+        </label>
+      </div>
+      <h3 style="font-size:18px;margin-top:18px">Infracciones detectadas</h3>
+      <p class="muted" style="margin:4px 0 0;font-size:15px">Cuántas infracciones de cada tipo podría encontrar el inspector.</p>
+      <div class="grid3" style="margin-top:12px">
+        <label class="f">Leves<input id="c-leve" type="number" min="0" step="1" value="0" inputmode="numeric"></label>
+        <label class="f">Graves<input id="c-grave" type="number" min="0" step="1" value="2" inputmode="numeric"></label>
+        <label class="f">Muy graves<input id="c-mgrave" type="number" min="0" step="1" value="1" inputmode="numeric"></label>
+      </div>
+      <p class="note">Ejemplos frecuentes en SST: no contar con IPERC o no capacitar suele tipificarse como grave; no adoptar medidas que deriven en un accidente con daño al trabajador, como muy grave. La calificación final la hace SUNAFIL.</p>
+    </div>
+    <aside class="card sticky" aria-live="polite">
+      <div class="muted" style="font-weight:600">Exposición estimada</div>
+      <div class="big" id="total" style="margin-top:10px">S/ 0</div>
+      <div class="muted" id="totalUit"></div>
+      <table>
+        <thead><tr><th>Tipo</th><th class="n">Por infracción</th><th class="n">Cant.</th><th class="n">Subtotal</th></tr></thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+      <div class="note" id="capNote"></div>
+      <div class="row">
+        <a class="btn" href="#contacto" id="toContact">Quiero reducir este riesgo</a>
+        <button class="btn ghost" id="copyCalc" type="button">Copiar resultado</button>
+      </div>
+      <div class="toast" id="toastC"></div>
+      <div id="contacto" class="hidden" style="margin-top:14px;background:var(--blueSoft);border-radius:12px;padding:14px">
+        <b>Conversemos.</b> Escríbenos por LinkedIn a <b>Opzilia Consulting</b> y cuéntanos cómo gestionas hoy tu SST. Te mostramos cómo se vería digitalizado, sin costo.
+      </div>
+      <p class="note">Montos según la tabla del D.S. 019-2006-TR modificada por el D.S. 008-2020-TR, con UIT 2026 de S/ 5,500 (D.S. 301-2025-EF). Estimación referencial: no incluye reducciones por subsanación ni beneficios MYPE, que dependen de cada caso.</p>
+    </aside>
+  </section>
+</main>
+
+<script>
+{
+const UIT=5500;
+const TAB={
+ micro:{br:[1,2,3,4,5,6,7,8,9,Infinity],lab:['1','2','3','4','5','6','7','8','9','10 a más'],
+  leve:[.045,.05,.07,.08,.09,.11,.14,.16,.18,.23],grave:[.11,.14,.16,.18,.20,.25,.29,.34,.38,.45],mgrave:[.23,.25,.29,.32,.36,.41,.47,.54,.61,.68]},
+ peq:{br:[5,10,20,30,40,50,60,70,99,Infinity],
+  leve:[.09,.14,.18,.23,.32,.45,.61,.83,1.01,2.25],grave:[.45,.59,.77,.97,1.26,1.62,2.09,2.43,2.81,4.50],mgrave:[.77,.99,1.28,1.64,2.14,2.75,3.56,4.32,4.95,7.65]},
+ nomype:{br:[10,25,50,100,200,300,400,500,999,Infinity],
+  leve:[.26,.89,1.26,2.33,3.10,3.73,5.30,7.61,10.87,15.52],grave:[1.57,3.92,5.22,6.53,7.83,10.45,13.06,18.28,20.89,26.12],mgrave:[2.63,5.25,7.88,11.56,14.18,18.39,23.64,31.52,42.03,52.53]}
+};
+const Q=[
+ ['Política de SST','¿Tienes una política de SST firmada por la gerencia, publicada y conocida por los trabajadores?','Formalizar y difundir la política de SST'],
+ ['IPERC por puesto','¿Cuentas con la matriz IPERC de todos los puestos, actualizada al menos una vez al año o tras cambios?','Actualizar el IPERC de todos los puestos'],
+ ['Comité o Supervisor de SST','¿Tienes Comité de SST (20 o más trabajadores) o Supervisor de SST elegido y con mandato vigente?','Elegir o renovar el Comité o Supervisor de SST'],
+ ['Reglamento interno de SST','¿Tienes Reglamento Interno de SST aprobado y entregado a cada trabajador (obligatorio desde 20 trabajadores)?','Aprobar y entregar el Reglamento Interno de SST'],
+ ['Programa anual','¿Tienes un programa anual de SST con actividades, responsables y fechas, y le haces seguimiento?','Armar y monitorear el programa anual de SST'],
+ ['Capacitaciones','¿Realizas al menos cuatro capacitaciones de SST al año y guardas el registro firmado?','Completar las cuatro capacitaciones anuales con registro'],
+ ['Exámenes médicos','¿Tus trabajadores tienen exámenes médicos ocupacionales vigentes?','Regularizar los exámenes médicos ocupacionales'],
+ ['Registros obligatorios','¿Mantienes al día los registros obligatorios (accidentes, incidentes, inspecciones, monitoreos, equipos de emergencia, estadísticas)?','Poner al día los registros obligatorios'],
+ ['Equipos de protección','¿Entregas EPP según el riesgo de cada puesto y registras cada entrega?','Registrar la entrega de EPP por trabajador'],
+ ['Investigación de accidentes','¿Investigas y registras accidentes e incidentes, con medidas correctivas y seguimiento?','Investigar y cerrar accidentes e incidentes'],
+ ['Auditoría del sistema','¿Tu sistema de gestión de SST ha sido auditado en los plazos que exige la norma?','Programar la auditoría del sistema de gestión'],
+ ['Evidencia al instante','Si SUNAFIL llega mañana, ¿podrías mostrar toda esta evidencia en menos de un día?','Centralizar la evidencia para responder rápido']
+];
+const SC={si:2,parcial:1,no:0};
+let st={ans:{},d:{tipo:'nomype',trab:150},c:{tipo:'nomype',trab:150,leve:0,grave:2,mgrave:1}};
+try{const s=JSON.parse(localStorage.getItem('opzilia-tools')||'null');if(s)st=Object.assign(st,s)}catch(e){}
+const save=()=>{try{localStorage.setItem('opzilia-tools',JSON.stringify(st))}catch(e){}};
+const $=id=>document.getElementById(id);
+const fmt=n=>'S/ '+n.toLocaleString('es-PE',{minimumFractionDigits:0,maximumFractionDigits:2});
+const qs=$('qs');
+qs.innerHTML=Q.map((q,i)=>`<div class="q"><h3>${i+1}. ${q[0]}</h3><p>${q[1]}</p><div class="opts" role="group" aria-label="${q[0]}">${['si','parcial','no'].map(o=>`<button type="button" data-q="${i}" data-o="${o}" aria-pressed="false">${o==='si'?'Sí':o==='parcial'?'Parcialmente':'No'}</button>`).join('')}</div></div>`).join('');
+$('px').innerHTML=Array.from({length:24},()=>'<i></i>').join('');
+const lvlOf=p=>p>=80?['Sistema sólido','var(--ok)']:p>=50?['En riesgo','var(--warn)']:['Riesgo crítico','var(--bad)'];
+function diag(){
+ const keys=Object.keys(st.ans);const got=keys.reduce((a,k)=>a+SC[st.ans[k]],0);
+ const pct=keys.length?Math.round(got/(keys.length*2)*100):0;
+ document.querySelectorAll('.opts button').forEach(b=>b.setAttribute('aria-pressed',st.ans[b.dataset.q]===b.dataset.o));
+ $('arc').setAttribute('stroke-dasharray',(314.16*pct/100).toFixed(1)+' 314.16');
+ $('pct').textContent=pct+'%';
+ const [l,c]=keys.length?lvlOf(pct):['Responde las preguntas','var(--muted)'];
+ $('lvl').textContent=l;$('lvl').style.color=c;
+ $('ringsvg').setAttribute('aria-label','Cumplimiento '+pct+'%');
+ $('cnt').textContent=keys.length+' de '+Q.length+' respondidas';
+ const on=Math.round(24*pct/100);[...$('px').children].forEach((x,i)=>x.classList.toggle('on',i<on));
+ const g=Q.map((q,i)=>({q,i,v:st.ans[i]})).filter(x=>x.v==='no'||x.v==='parcial').sort((a,b)=>SC[a.v]-SC[b.v]).slice(0,3);
+ $('gaps').innerHTML=g.length?g.map(x=>`<li><b>${x.q[2]}</b><span class="muted">${x.v==='no'?'No implementado':'Implementado a medias'}</span></li>`).join(''):`<li class="muted">${keys.length?'Sin brechas en lo respondido. Buen trabajo.':'Aparecerán aquí cuando respondas.'}</li>`;
+ return {pct,l,g,keys};
+}
+function rowFor(t,n){const T=TAB[t];let i=T.br.findIndex(b=>n<=b);return i<0?T.br.length-1:i}
+function calc(){
+ const c=st.c,T=TAB[c.tipo],i=rowFor(c.tipo,Math.max(1,c.trab||1));
+ const rows=[['Leve','leve'],['Grave','grave'],['Muy grave','mgrave']].map(([n,k])=>{const u=T[k][i];const q=Math.max(0,Math.floor(c[k]||0));return {n,u,q,s:u*q}});
+ let uit=rows.reduce((a,r)=>a+r.s,0);const capped=uit>200;if(capped)uit=200;
+ $('breakdown').innerHTML=rows.map(r=>`<tr><td>${r.n}</td><td class="n">${fmt(r.u*UIT)}</td><td class="n">${r.q}</td><td class="n">${fmt(r.s*UIT)}</td></tr>`).join('');
+ $('total').textContent=fmt(uit*UIT);
+ $('totalUit').textContent=(Math.round(uit*100)/100).toLocaleString('es-PE')+' UIT en total';
+ $('capNote').textContent=capped?'Se aplicó el tope de 200 UIT por inspección.':'';
+ return {uit,rows};
+}
+function syncInputs(){
+ $('d-tipo').value=st.d.tipo;$('d-trab').value=st.d.trab;
+ $('c-tipo').value=st.c.tipo;$('c-trab').value=st.c.trab;
+ $('c-leve').value=st.c.leve;$('c-grave').value=st.c.grave;$('c-mgrave').value=st.c.mgrave;
+}
+qs.addEventListener('click',e=>{const b=e.target.closest('button[data-q]');if(!b)return;st.ans[b.dataset.q]=b.dataset.o;save();diag()});
+$('d-tipo').addEventListener('change',e=>{st.d.tipo=e.target.value;save()});
+$('d-trab').addEventListener('input',e=>{st.d.trab=+e.target.value||1;save()});
+[['c-tipo','tipo'],['c-trab','trab'],['c-leve','leve'],['c-grave','grave'],['c-mgrave','mgrave']].forEach(([id,k])=>{
+ $(id).addEventListener(id==='c-tipo'?'change':'input',e=>{st.c[k]=k==='tipo'?e.target.value:(+e.target.value||0);save();calc()})});
+$('toCalc').addEventListener('click',()=>{
+ const n=Object.values(st.ans).filter(v=>v==='no').length;
+ st.c.tipo=st.d.tipo;st.c.trab=st.d.trab;st.c.grave=n;st.c.leve=Object.values(st.ans).filter(v=>v==='parcial').length;st.c.mgrave=0;
+ save();syncInputs();calc();
+});
+$('toContact').addEventListener('click',e=>{e.preventDefault();$('contacto').classList.remove('hidden')});
+async function copy(text,el){try{await navigator.clipboard.writeText(text);el.textContent='Copiado al portapapeles.'}catch(e){el.textContent='No se pudo copiar automáticamente.'}}
+$('copyDiag').addEventListener('click',()=>{const r=diag();copy(`Autodiagnóstico SST (Opzilia): ${r.pct}% de cumplimiento, ${r.l}. Brechas: ${r.g.map(x=>x.q[2]).join('; ')||'ninguna'}.`,$('toastD'))});
+$('copyCalc').addEventListener('click',()=>{const r=calc();copy(`Exposición estimada a multas SUNAFIL (Opzilia): ${fmt(r.uit*UIT)} (${(Math.round(r.uit*100)/100)} UIT).`,$('toastC'))});
+const TXT={diag:['¿Tu sistema de SST resistiría una inspección de SUNAFIL hoy?','Responde 12 preguntas sobre la Ley 29783 y obtén tu nivel de cumplimiento y tus brechas prioritarias en menos de 5 minutos.'],
+ calc:['¿Cuánto podría costarte una inspección de SUNAFIL?','Estima la multa según el tamaño de tu empresa, los trabajadores afectados y la gravedad de las infracciones, con la UIT 2026.']};
+function route(){
+ const v=location.hash==='#calculadora'?'calc':'diag';
+ $('v-diag').classList.toggle('hidden',v!=='diag');$('v-calc').classList.toggle('hidden',v!=='calc');
+ $('t-diag').toggleAttribute('aria-current',v==='diag');$('t-calc').toggleAttribute('aria-current',v==='calc');
+ if(v==='diag')$('t-diag').setAttribute('aria-current','page');else $('t-calc').setAttribute('aria-current','page');
+ $('title').textContent=TXT[v][0];$('lead').textContent=TXT[v][1];
+}
+window.addEventListener('hashchange',route);
+syncInputs();diag();calc();route();
+}
+</script>
+</body>
+</html>
