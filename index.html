@@ -60,7 +60,7 @@ html{scroll-behavior:smooth}
         <a href="#problema" style="color: #5A524B; text-decoration: none">Por qué Opzilia</a>
         <a href="#metodo" style="color: #5A524B; text-decoration: none">Cómo trabajamos</a>
         <a href="#areas" style="color: #5A524B; text-decoration: none">Áreas</a>
-        <a href="/herramientas/" style="color: #5A524B; text-decoration: none">Autodiagnóstico</a>
+        <a href="#herramientas" style="color: #5A524B; text-decoration: none">Herramientas gratuitas</a>
         <a href="#contacto" style="background: #B4682F; color: #FFFFFF; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 600">Agenda un diagnóstico</a>
       </div>
     </nav>
@@ -197,6 +197,30 @@ html{scroll-behavior:smooth}
     </div>
   </section>
 
+  <section id="herramientas" style="background: #1E1B18; color: #FFFFFF">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 40px">
+      <div style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+        <div style="font-size: 14px; font-weight: 600; letter-spacing: 3px; color: #E0A06A">HERRAMIENTAS GRATUITAS</div>
+        <h2 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 44px; line-height: 1.1; letter-spacing: -1px">¿Tu SST resistiría una inspección de SUNAFIL hoy?</h2>
+        <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D8CFC5">Dos herramientas sin costo y sin registro para saber dónde estás y cuánto podrías arriesgar.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">
+        <a href="/herramientas/#autodiagnostico" class="gf-card" style="text-decoration: none; color: #FFFFFF; background: #2A2622; border: 1px solid #38322C; border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: rgba(224,160,106,.14); color: #E0A06A; display: inline-flex; align-items: center; justify-content: center; font-size: 22px">✓</span><span style="font-size: 13px; font-weight: 600; letter-spacing: 2px; color: #E0A06A">5 MINUTOS</span></div>
+          <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 26px; line-height: 1.2">Autodiagnóstico SST</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #D8CFC5">Responde 12 preguntas basadas en la Ley 29783 y obtén tu nivel de cumplimiento y tus tres brechas prioritarias.</p>
+          <span style="margin-top: auto; padding-top: 8px; font-weight: 600; color: #E0A06A">Hacer mi autodiagnóstico →</span>
+        </a>
+        <a href="/herramientas/#calculadora" class="gf-card" style="text-decoration: none; color: #FFFFFF; background: #2A2622; border: 1px solid #38322C; border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 10px; background: rgba(224,160,106,.14); color: #E0A06A; display: inline-flex; align-items: center; justify-content: center; font-size: 22px">S/</span><span style="font-size: 13px; font-weight: 600; letter-spacing: 2px; color: #E0A06A">UIT 2026</span></div>
+          <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 26px; line-height: 1.2">Calculadora de multas SUNAFIL</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #D8CFC5">Estima cuánto podría costarle a tu empresa una infracción leve, grave o muy grave según su tamaño y número de trabajadores afectados.</p>
+          <span style="margin-top: auto; padding-top: 8px; font-weight: 600; color: #E0A06A">Calcular mi multa potencial →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section style="background: #FFFFFF">
     <div style="max-width: 1200px; margin: 0 auto; padding: 88px 24px; display: flex; flex-direction: column; gap: 40px">
       <h2 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 44px; line-height: 1.1; letter-spacing: -1px; max-width: 760px">A la medida, sin ser caro ni lento.</h2>
@@ -252,7 +276,13 @@ html{scroll-behavior:smooth}
           <textarea id="proceso" rows="4" placeholder="Ej.: armamos el reporte mensual de inspecciones juntando varios Excel" style="font-size: 16px; padding: 12px 14px; border: 1px solid #C9BFB4; border-radius: 8px; resize: vertical"></textarea>
         </div>
         <button type="submit" style="background: #B4682F; color: #FFFFFF; border: none; border-radius: 8px; padding: 16px 24px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif">Solicitar diagnóstico gratuito</button>
-        <p style="margin:0;font-size:13px;color:#7A6E63">Al enviar se abrirá WhatsApp con tu mensaje listo.</p>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <p id="form-nota" style="margin:0;font-size:13px;color:#7A6E63">Te responderemos en menos de 24 horas hábiles.</p>
+        <div id="form-ok" role="status" hidden style="background:#F3F1EE;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <strong style="font-family:'Montserrat',sans-serif;font-size:18px">¡Gracias! Recibimos tu solicitud.</strong>
+          <span style="font-size:15px;color:#5A524B">Te escribiremos pronto para coordinar tu diagnóstico. Si prefieres, también puedes escribirnos ahora por WhatsApp.</span>
+          <a id="form-wa" href="https://wa.me/51948294667" target="_blank" rel="noopener" style="align-self:flex-start;background:#1E1B18;color:#FFFFFF;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600">Escribir por WhatsApp</a>
+        </div>
       </form>
     </div>
   </section>
@@ -267,14 +297,28 @@ html{scroll-behavior:smooth}
 </div>
 
 <script>
-document.getElementById('form-contacto').addEventListener('submit',function(e){
-  e.preventDefault();
-  var v=function(id){return (document.getElementById(id).value||'').trim()};
-  var msg='Hola Opzilia, quiero solicitar el diagnóstico gratuito.\n'+
-    'Nombre: '+v('nombre')+'\nEmpresa: '+v('empresa')+'\nCargo: '+v('cargo')+'\nCorreo: '+v('correo')+
-    '\nProceso que más tiempo nos quita: '+v('proceso');
-  window.open('https://wa.me/51948294667?text='+encodeURIComponent(msg),'_blank','noopener');
-});
+/* URL del Apps Script (Google Sheets) que guarda las solicitudes. Vacía = solo WhatsApp. */
+var LEADS_URL = '';
+(function(){
+  var form=document.getElementById('form-contacto');
+  var v=function(id){var el=document.getElementById(id);return el?(el.value||'').trim():''};
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(v('website')) return;
+    var d={nombre:v('nombre'),empresa:v('empresa'),cargo:v('cargo'),correo:v('correo'),proceso:v('proceso'),origen:'Web - formulario de diagnóstico'};
+    var msg='Hola Opzilia, quiero solicitar el diagnóstico gratuito.\nNombre: '+d.nombre+'\nEmpresa: '+d.empresa+'\nCargo: '+d.cargo+'\nCorreo: '+d.correo+'\nProceso que más tiempo nos quita: '+d.proceso;
+    var wa='https://wa.me/51948294667?text='+encodeURIComponent(msg);
+    if(!LEADS_URL){window.open(wa,'_blank','noopener');return;}
+    var btn=form.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Enviando…';
+    fetch(LEADS_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams(d)})
+      .catch(function(){})
+      .then(function(){
+        btn.style.display='none';document.getElementById('form-nota').hidden=true;
+        document.getElementById('form-wa').href=wa;
+        var ok=document.getElementById('form-ok');ok.hidden=false;ok.scrollIntoView({behavior:'smooth',block:'center'});
+      });
+  });
+})();
 </script>
 </body>
 </html>
